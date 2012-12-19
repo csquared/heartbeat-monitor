@@ -34,6 +34,7 @@ sense when we had to connect to a different endpoint.
 
 ## Tests
 
+    > redis-server
     > bundle exec t
 
 
