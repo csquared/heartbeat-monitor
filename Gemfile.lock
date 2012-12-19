@@ -4,6 +4,7 @@ GEM
     ansi (1.4.3)
     daemons (1.1.9)
     eventmachine (1.0.0)
+    excon (0.16.10)
     hashie (1.2.0)
     i18n (0.6.1)
     json (1.7.5)
@@ -49,8 +50,6 @@ GEM
       json (~> 1.4)
     redcarpet (2.2.2)
     redis (3.0.2)
-    rest-client (1.6.7)
-      mime-types (>= 1.16)
     ruby-openid (2.2.2)
     ruby-openid-apps-discovery (1.2.0)
       ruby-openid (>= 2.1.7)
@@ -85,19 +84,21 @@ GEM
     vault-tools (0.0.5)
       scrolls
       sinatra
+    yajl-ruby (1.1.0)
     yard (0.8.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  excon
   mail
   rack-ssl-enforcer
   redis
-  rest-client
   scrolls
   sinatra-google-auth
   smart_env
   thin
   vault-test-tools
   vault-tools
+  yajl-ruby

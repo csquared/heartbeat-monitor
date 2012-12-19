@@ -4,10 +4,10 @@ class Frontend < Sinatra::Base
   if ENV['RACK_ENV'] == 'production'
     require 'sinatra-google-auth'
     register Sinatra::GoogleAuth
+    use Sinatra::GoogleAuth::MiddleWare
   end
 
   get '/' do
-    authenticate
     @color = Arduino.up? ? 'green' : 'red'
     erb :index
   end
@@ -15,7 +15,12 @@ end
 
 class Api < Sinatra::Base
   use Rack::Auth::Basic, "Restricted Area" do |username, password|
-    [username, password] == [ENV['API_USERNAME'], ENV['API_PASSWORD']]
+    if [username, password] == [ENV['API_USERNAME'], ENV['API_PASSWORD']]
+      true
+    else
+      $stdout.puts 'Auth Fail'
+      false
+    end
   end
 
   post '/' do
@@ -36,7 +41,7 @@ class Status < Sinatra::Base
       # Connect to status
       begin
         url = ENV['STATUS_URL']
-        result = RestClient.get(url).to_s
+        result = Excon.get(url).body
         $stdout.puts "url=#{url} result=#{result}"
         red = (result.empty? || JSON.parse(result)["status"].values.include?('red'))
       rescue Exception => e
