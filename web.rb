@@ -1,7 +1,17 @@
 require './env'
 
+BASIC_AUTH = lambda do |username, password|
+  if [username, password] == [ENV['API_USERNAME'], ENV['API_PASSWORD']]
+    true
+  else
+    $stdout.puts 'Auth Fail'
+    false
+  end
+end
+
+
 class Frontend < Sinatra::Base
-  if ENV['RACK_ENV'] == 'production'
+  configure :production do
     require 'sinatra-google-auth'
     register Sinatra::GoogleAuth
     use Sinatra::GoogleAuth::MiddleWare
@@ -13,24 +23,19 @@ class Frontend < Sinatra::Base
   end
 end
 
+#Deprecated: It auto-sets the heartbeat when you get the status.
 class Api < Sinatra::Base
-  use Rack::Auth::Basic, "Restricted Area" do |username, password|
-    if [username, password] == [ENV['API_USERNAME'], ENV['API_PASSWORD']]
-      true
-    else
-      $stdout.puts 'Auth Fail'
-      false
-    end
-  end
+  use Rack::Auth::Basic, "Restricted Area", &BASIC_AUTH
 
   post '/' do
     Arduino.heartbeat
-    $stdout.puts "heartbeat #{Time.now.to_s}"
     'ok'
   end
 end
 
 class Status < Sinatra::Base
+  use Rack::Auth::Basic, "Restricted Area", &BASIC_AUTH
+
   get '*' do
     red = true
     # Let's us trigger a "red" response by setting a config var for testing
@@ -39,6 +44,8 @@ class Status < Sinatra::Base
       red = true
     else
       # Connect to status
+      # Assume we're up!
+      Arduino.heartbeat
       begin
         url = ENV['STATUS_URL']
         result = Excon.get(url).body
@@ -59,6 +66,7 @@ StatusMonitor = Rack::Builder.new do
     run Frontend
   end
 
+  # Todo: Deprecate
   map '/heartbeat' do
     run Api
   end
