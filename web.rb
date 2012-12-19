@@ -41,7 +41,6 @@ class Status < Sinatra::Base
     # Let's us trigger a "red" response by setting a config var for testing
     if ENV['FIREDRILL']
       $stdout.puts "firedrill=true "
-      red = true
     else
       # Connect to status
       # Assume we're up!

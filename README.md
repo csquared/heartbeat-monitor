@@ -19,16 +19,18 @@ It accepts HTTP POSTs to `/heartbeat`.
 A self-refreshing page that is all green or all red depending on if
 the heartbeat request came in within the interval.
 
-### POST '/heartbeat'
+### GET '/status'
 
 Requires shared-secret over HTTPS Basic Auth.  (Better than nothing!)
 Sets 'heartbeat' key in Redis with expiry of `HEARTBEAT_DELAY`
-
-### GET '/status'
-
-returns Request body of `red` or `green` for easy machine parsing.
+Returns Request body of `red` or `green` for easy machine parsing.
 
 You can simulate red by setting the `FIREDRILL` env variable.
+
+### (deprecated) POST '/heartbeat'
+
+You can assume a heartbeat when the GETs come in - this is just duplicated effort that only made
+sense when we had to connect to a different endpoint.
 
 ## Tests
 
