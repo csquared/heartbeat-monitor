@@ -71,4 +71,12 @@ class StatusTest < Vault::TestCase
     last_response.body.must_equal 'red'
   end
 
+  # Test returns body of 'red' when response is empty
+  def test_status_red_on_empty
+    Excon.stub({method: :get}, {body: '', status: 200})
+
+    authorize 'user', 'password'
+    assert_output( /red/,'') { get '/status' }
+    last_response.body.must_equal 'red'
+  end
 end

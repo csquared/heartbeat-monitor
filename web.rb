@@ -42,10 +42,10 @@ class Status < Sinatra::Base
     if ENV['FIREDRILL']
       $stdout.puts "firedrill=true "
     else
-      # Connect to status
       # Assume we're up!
       Arduino.heartbeat
       begin
+        # Connect to status
         url = ENV['STATUS_URL']
         result = Excon.get(url).body
         $stdout.puts "url=#{url} result=#{result}"
