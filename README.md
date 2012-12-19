@@ -32,7 +32,7 @@ You can simulate red by setting the `FIREDRILL` env variable.
 
 ## Tests
 
-    > t
+    > bundle exec t
 
 
 ## Configuration
