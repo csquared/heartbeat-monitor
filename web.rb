@@ -14,7 +14,8 @@ class Frontend < Sinatra::Base
   configure :production do
     require 'sinatra-google-auth'
     register Sinatra::GoogleAuth
-    use Sinatra::GoogleAuth::MiddleWare
+    use Sinatra::GoogleAuth::Middleware
+    use Rack::SslEnforcer unless ENV['SSL_OFF']
   end
 
   get '/' do
@@ -74,4 +75,3 @@ StatusMonitor = Rack::Builder.new do
     run Status
   end
 end
-
