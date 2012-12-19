@@ -3,10 +3,10 @@
 
 ## Processes
 
-### web
+### `web`
 Web Frontend
 
-###
+### `monitor`
 There is also a process that monitors the heartbeat and sends an email when it
 stops.
 
@@ -30,6 +30,10 @@ returns Request body of `red` or `green` for easy machine parsing.
 
 You can simulate red by setting the `FIREDRILL` env variable.
 
+## Tests
+
+    > t
+
 
 ## Configuration
 
@@ -40,7 +44,4 @@ You can simulate red by setting the `FIREDRILL` env variable.
     MONITOR_EMAIL    -> who to email
     API_PASSWORD     -> HTTP Basic password for the `/heartbeat` request
     SENDGRID_USERNAME, SENDGRID_PASSWORD -> Mail credentials
-
-    FIREDRILL        -> read status from
-
-
+    FIREDRILL        -> send red from '/status'
