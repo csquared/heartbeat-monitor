@@ -4,15 +4,13 @@
 ## Processes
 
 ### `web`
-Web Frontend
+Web Frontend to serve status to Arduino and people.
 
 ### `monitor`
-There is also a process that monitors the heartbeat and sends an email when it
-stops.
+Check the heartbeat and sends an email when it stops.
 
 ## Web
-This web app is a Sinatra application that implements a heartbeat monitor.
-It accepts HTTP POSTs to `/heartbeat`.
+Sinatra application that implements a heartbeat monitor.
 
 ### GET '/'
 
@@ -21,16 +19,16 @@ the heartbeat request came in within the interval.
 
 ### GET '/status'
 
-Requires shared-secret over HTTPS Basic Auth.  (Better than nothing!)
+Requires shared-secret over HTTPS Basic Auth.
 Sets 'heartbeat' key in Redis with expiry of `HEARTBEAT_DELAY`
-Returns Request body of `red` or `green` for easy machine parsing.
+Returns request body of `red` or `green` for easy machine parsing.
 
-You can simulate red by setting the `FIREDRILL` env variable.
+You can simulate red by setting the `FIREDRILL` ENV variable.
 
 ### (deprecated) POST '/heartbeat'
 
-You can assume a heartbeat when the GETs come in - this is just duplicated effort that only made
-sense when we had to connect to a different endpoint.
+Because we can assume a heartbeat when the GETs come in to `/status` this is just
+duplicated effort that only made sense when we had to connect to a different endpoint.
 
 ## Tests
 
