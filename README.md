@@ -38,6 +38,7 @@ You can simulate red by setting the `FIREDRILL` ENV variable.
     HEARTBEAT_DELAY  -> how long to wait for the next heartbeat (seconds)
     MONITOR_INTERVAL -> polling interval for the monitor process (seconds)
     MONITOR_EMAIL    -> who to email
-    API_PASSWORD     -> HTTP Basic password for the `/heartbeat` request
+    API_USERNAME     -> HTTP Basic username for the `/status` request
+    API_PASSWORD     -> HTTP Basic password for the `/status` request
     SENDGRID_USERNAME, SENDGRID_PASSWORD -> Mail credentials
     FIREDRILL        -> send red from '/status'
