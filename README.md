@@ -25,11 +25,6 @@ Returns request body of `red` or `green` for easy machine parsing.
 
 You can simulate red by setting the `FIREDRILL` ENV variable.
 
-### (deprecated) POST '/heartbeat'
-
-Because we can assume a heartbeat when the GETs come in to `/status` this is just
-duplicated effort that only made sense when we had to connect to a different endpoint.
-
 ## Tests
 
     > redis-server
