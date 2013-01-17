@@ -1,5 +1,6 @@
 require './env'
 
+# log auth failures so i can see if someone's being an asshole
 BASIC_AUTH = lambda do |username, password|
   if [username, password] == [ENV['API_USERNAME'], ENV['API_PASSWORD']]
     true
@@ -9,7 +10,7 @@ BASIC_AUTH = lambda do |username, password|
   end
 end
 
-
+# for the people
 class Frontend < Sinatra::Base
   configure :production do
     require 'sinatra-google-auth'
@@ -24,7 +25,7 @@ class Frontend < Sinatra::Base
   end
 end
 
-#Deprecated: It auto-sets the heartbeat when you get the status.
+#Deprecated: redundant - we now call Arduino.heartbeat when you get the status.
 class Api < Sinatra::Base
   use Rack::Auth::Basic, "Restricted Area", &BASIC_AUTH
 
@@ -34,6 +35,7 @@ class Api < Sinatra::Base
   end
 end
 
+# for the machines
 class Status < Sinatra::Base
   use Rack::Auth::Basic, "Restricted Area", &BASIC_AUTH
 
@@ -51,14 +53,15 @@ class Status < Sinatra::Base
         response = Excon.get(url)
         body   = response.body
         $stdout.puts "url=#{url} status=#{response.status} response_body=#{body}"
-        if response.status == 502
+        if response.status == 502 || body.empty?
           $stdout.puts "at=502 override"
           red = false
         else
-          red = (body.empty? || JSON.parse(body)["status"].values.include?('red'))
+          red = JSON.parse(body)["status"].values.include?('red')
         end
       rescue Exception => e
-        puts "Error connecting to status #{e.message}"
+        red = false
+        $stdout.puts "error=#{e.class} message=#{e.message}"
       end
     end
     status = red ? 'red' : 'green'

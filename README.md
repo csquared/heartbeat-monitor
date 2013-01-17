@@ -1,5 +1,6 @@
 # Heartbeat Monitor
 
+This system powers the Heroku web portion of our Outage Lights system.
 
 ## Processes
 
@@ -22,6 +23,8 @@ the heartbeat request came in within the interval.
 Requires shared-secret over HTTPS Basic Auth.
 Sets 'heartbeat' key in Redis with expiry of `HEARTBEAT_DELAY`
 Returns request body of `red` or `green` for easy machine parsing.
+
+We take care to not trip the lights when we fuck up.
 
 You can simulate red by setting the `FIREDRILL` ENV variable.
 

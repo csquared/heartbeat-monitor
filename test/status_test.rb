@@ -74,20 +74,40 @@ class StatusTest < Vault::TestCase
     last_response.body.must_equal 'red'
   end
 
-  # Test returns body of 'red' when response is empty
-  def test_status_red_on_empty
+  # let's not throw the lights when we fuck up
+  # Test returns body of 'green' when response is empty
+  def test_status_green_on_empty
     Excon.stub({method: :get}, {body: '', status: 200})
 
     authorize 'user', 'password'
-    assert_output( /red/,'') { get '/status' }
-    last_response.body.must_equal 'red'
+    assert_output( /status=200/,'') { get '/status' }
+    last_response.body.must_equal 'green'
   end
 
-  def test_returns_green_on_502
+  # let's not throw the lights when we fuck up
+  # Test returns body of 'green' when we get html
+  def test_json_parser_error
+    Excon.stub({method: :get}, {body: '<doctype', status: 200})
+
+    authorize 'user', 'password'
+    assert_output( /JSON::ParserError/,'') { get '/status' }
+    last_response.body.must_equal 'green'
+  end
+
+  # let's not throw the lights when we fuck up
+  # Test returns body of 'green' when we get a 502
+  # because that means they're restarting nginx.
+  def test_status_green_on_502
     Excon.stub({method: :get}, {body: '<doctype', status: 502})
 
     authorize 'user', 'password'
     assert_output( /502 override/,'') { get '/status' }
     last_response.body.must_equal 'green'
+  end
+
+  def test_errors_considered_system_down
+    Excon.stub({method: :get}, {body: '<doctype', status: 502})
+    silence { get '/status' }
+
   end
 end
