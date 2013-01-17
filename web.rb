@@ -48,9 +48,15 @@ class Status < Sinatra::Base
       begin
         # Connect to status
         url = ENV['STATUS_URL']
-        result = Excon.get(url).body
-        $stdout.puts "url=#{url} result=#{result}"
-        red = (result.empty? || JSON.parse(result)["status"].values.include?('red'))
+        response = Excon.get(url)
+        body   = response.body
+        $stdout.puts "url=#{url} status=#{response.status} response_body=#{body}"
+        if response.status == 502
+          $stdout.puts "at=502 override"
+          red = false
+        else
+          red = (body.empty? || JSON.parse(body)["status"].values.include?('red'))
+        end
       rescue Exception => e
         puts "Error connecting to status #{e.message}"
       end

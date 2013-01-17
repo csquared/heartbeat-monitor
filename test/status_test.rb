@@ -13,13 +13,16 @@ class StatusTest < Vault::TestCase
 
   # Test basic auth requried
   def test_basic_auth
+    status = {'status' => {'development' => 'green', 'production' => 'green'}}
+    Excon.stub({method: :get}, {body: status.to_json, status: 200})
+
     assert_output(//, '') { get '/status' }
     last_response.status.must_equal 401
     authorize 'user', 'foo'
     assert_output(/Auth Fail/, '') { get '/status' }
     last_response.status.must_equal 401
     authorize 'user', 'password'
-    assert_output(/status/, //) { get '/status' }
+    assert_output(/response_body=/, //) { get '/status' }
     last_response.status.must_equal 200
   end
 
@@ -78,5 +81,13 @@ class StatusTest < Vault::TestCase
     authorize 'user', 'password'
     assert_output( /red/,'') { get '/status' }
     last_response.body.must_equal 'red'
+  end
+
+  def test_returns_green_on_502
+    Excon.stub({method: :get}, {body: '<doctype', status: 502})
+
+    authorize 'user', 'password'
+    assert_output( /502 override/,'') { get '/status' }
+    last_response.body.must_equal 'green'
   end
 end
