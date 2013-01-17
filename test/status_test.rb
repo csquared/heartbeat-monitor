@@ -37,7 +37,9 @@ class StatusTest < Vault::TestCase
   end
 
   def test_status_sets_heartbeat
-    Excon.stub({method: :get}, {body: {}.to_json, status: 200})
+    status = {'status' => {'development' => 'green', 'production' => 'green'}}
+    Excon.stub({method: :get}, {body: status.to_json, status: 200})
+
     Arduino.up?.must_equal false
     authorize 'user', 'password'
     capture_io { get '/status' }
@@ -106,8 +108,11 @@ class StatusTest < Vault::TestCase
   end
 
   def test_errors_considered_system_down
-    Excon.stub({method: :get}, {body: '<doctype', status: 502})
-    silence { get '/status' }
+    Arduino.up!
+    Excon.stub({method: :get}, {body: '<doctype', status: 200})
 
+    authorize 'user', 'password'
+    capture_io { get '/status' }
+    Arduino.up?.must_equal false
   end
 end

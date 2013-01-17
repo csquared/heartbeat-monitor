@@ -46,7 +46,6 @@ class Status < Sinatra::Base
       $stdout.puts "firedrill=true "
     else
       # Assume we're up!
-      Arduino.heartbeat
       begin
         # Connect to status
         url = ENV['STATUS_URL']
@@ -59,7 +58,9 @@ class Status < Sinatra::Base
         else
           red = JSON.parse(body)["status"].values.include?('red')
         end
+        Arduino.up!
       rescue Exception => e
+        Arduino.down!
         red = false
         $stdout.puts "error=#{e.class} message=#{e.message}"
       end
