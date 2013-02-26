@@ -76,10 +76,6 @@ StatusMonitor = Rack::Builder.new do
     run Frontend
   end
 
-  map '/auth' do
-    run Frontend
-  end
-
   # Todo: Deprecate
   map '/heartbeat' do
     run Api
