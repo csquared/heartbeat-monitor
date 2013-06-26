@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/kendagriff/ruby-openid.git
+  revision: 79beaa419d4754e787757f2545331509419e222e
+  ref: 79beaa419d4754e787757f2545331509419e222e
+  specs:
+    ruby-openid (2.2.3)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -50,7 +57,6 @@ GEM
       json (~> 1.4)
     redcarpet (2.2.2)
     redis (3.0.2)
-    ruby-openid (2.2.2)
     ruby-openid-apps-discovery (1.2.0)
       ruby-openid (>= 2.1.7)
     scrolls (0.2.4)
@@ -95,6 +101,7 @@ DEPENDENCIES
   mail
   rack-ssl-enforcer
   redis
+  ruby-openid!
   scrolls
   sinatra-google-auth
   smart_env
